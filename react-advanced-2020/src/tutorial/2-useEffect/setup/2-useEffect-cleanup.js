@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
-
-// cleanup function
-// second argument
+import React, { useState, useEffect } from "react";
 
 const UseEffectCleanup = () => {
-  return <h2>useEffect cleanup</h2>;
+  const [w, setW] = useState(window.innerWidth);
+
+  useEffect(() => {
+    console.log("lol");
+    window.addEventListener("resize", add);
+    return () => {
+      window.removeEventListener("resize", add);
+    };
+  }, []);
+
+  function add() {
+    setW(window.innerWidth);
+  }
+  return <h2>{w}</h2>;
 };
 
 export default UseEffectCleanup;

@@ -1,7 +1,12 @@
 import React from "react";
-import UseStateArray from "./tutorial/1-useState/setup/5-useState-counter";
-// import UseStateArray from "./tutorial/1-useState/final/5-useState-counter";
+// import UseEffectBasics from "./tutorial/2-useEffect/final/1-useEffect-basics";
+import UseEffectBasics from "./tutorial/2-useEffect/setup/2-useEffect-cleanup";
+
 function App() {
-  return <UseStateArray />;
+  return (
+    <>
+      <UseEffectBasics />
+    </>
+  );
 }
 export default App;
