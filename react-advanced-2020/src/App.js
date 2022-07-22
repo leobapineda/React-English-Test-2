@@ -1,6 +1,6 @@
 import React from "react";
-// import UseEffectBasics from "./tutorial/2-useEffect/final/1-useEffect-basics";
-import UseEffectBasics from "./tutorial/3-conditional-rendering/setup/3-show-hide";
+// import UseEffectBasics from "./tutorial/4-forms/final/1-controlled-inputs";
+import UseEffectBasics from "./tutorial/4-forms/setup/1-controlled-inputs";
 
 function App() {
   return (
