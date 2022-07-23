@@ -1,6 +1,6 @@
 import React from "react";
 // import UseEffectBasics from "./tutorial/4-forms/final/1-controlled-inputs";
-import UseEffectBasics from "./tutorial/4-forms/setup/1-controlled-inputs";
+import UseEffectBasics from "./tutorial/4-forms/setup/2-multiple-inputs";
 
 function App() {
   return (
