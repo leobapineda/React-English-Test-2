@@ -1,83 +1,67 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useRef } from "react";
 // ---------->>>
-import Modal from './Modal';
-import data  from '../../../data';
-
-
+import Modal from "./Modal";
+import data from "../../../data";
+import reducer from "./reducer";
 const Index = () => {
-
   const ACTIONS = {
-    ADD: "add",
+    ADD: "add user",
+    REMOVE: "remove user",
+    ERROR: "error",
+    HIDE_MESSAGE: "hide",
     REMOVE: "remove",
-    EMPTY: "empty",
   };
 
-  function reducer(users, action) {
-    switch (action.type) {
-      case ACTIONS.ADD:
-        console.log("add");
-        return { data: [...users.data, action.payload], empty: false };
-      case ACTIONS.REMOVE:
-        console.log("remove");
-        return { data: action.payload, empty: false };
-      case ACTIONS.EMPTY:
-        console.log("default");
-        return { data: users.data, empty: action.payload };
+  const usersInitValue = {
+    users: data,
+    isModal: false,
+    modalMessage: "",
+  };
+
+  const [usersState, dispatch] = useReducer(reducer, usersInitValue);
+  const inputEl = useRef(null);
+
+ 
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const userName = inputEl.current.value;
+    if (userName) {
+      dispatch({
+        type: ACTIONS.ADD,
+        payload: {
+          name: userName,
+          id: Date.now(),
+        },
+      });
+    } else {
+      dispatch({ type: ACTIONS.ERROR, payload: "MUST PROVIDE USERNAME" });
     }
+    setTimeout(() => {
+      dispatch({ type: ACTIONS.HIDE_MESSAGE });
+    }, 1000);
   }
 
-  const [users, dispatch] = useReducer(reducer, {data, empty:false});
-  const [person, setPerson] = useState("")
-  // me esta metiendo a mi data un array con los otros tres elementos
-function handleSubmit(e) {
-  e.preventDefault()
-  addUser();
-setPerson("")
-}
-
-function addUser() {
-  if(person) {
-    dispatch({ type: ACTIONS.ADD, payload: {name:person, id: Date.now()} });
-  } else {
-    dispatch({ type: ACTIONS.EMPTY, payload: true });
+  function removeUser(id) {
+    const newUsers = usersState.users.filter((user) => user.id !== id);
+    dispatch({ type: ACTIONS.REMOVE, payload: newUsers });
   }
-}
 
-function removeUser(id){
-  const newUsers = users.data.filter((user) => user.id !== id)
-  console.log(newUsers);
-      dispatch({ type: ACTIONS.REMOVE, payload: newUsers });
-}
-console.log("user");
-console.log(users);
-console.log("user data");
-console.log(users.data);
+  console.log("render");
   return (
     <>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input
-          value={person}
-          onChange={(e) => setPerson(e.target.value)}
-          type="text"
-          name=""
-          id=""
-        />
-        <button>submit</button>
+      <form className="form" onSubmit={(e) => handleSubmit(e)}>
+        <input ref={inputEl} type="text" />
       </form>
+      <Modal show={usersState.isModal} message={usersState.modalMessage} />
+      <div className="item">{usersState.users.length}</div>
       <div>
-        {users.empty && <Modal />}
-        {users.data.map((person) => {
-          const { id, name } = person;
+        {usersState.users.map((user) => {
+          const { id, name } = user;
           return (
-            <div style={{ margin: "1rem" }} key={id}>
-              <span key={id}>{name}</span>
-              <button
-                onClick={() => {
-                  removeUser(id);
-                }}
-              >
-                remove
-              </button>
+            <div className="item" style={{ margin: "1rem" }} key={id}>
+              <span style={{ marginRight: "1rem" }}>{name}</span>
+              <button onClick={() => removeUser(id)}>remove</button>
             </div>
           );
         })}
@@ -87,3 +71,5 @@ console.log(users.data);
 };
 
 export default Index;
+
+// move the reduce logic to another componenet
