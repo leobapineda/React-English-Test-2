@@ -3,60 +3,84 @@ import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import { FaQuoteRight } from "react-icons/fa";
 import data from "./data";
 
-// al darle de nuevo click se almacena, pero que, que se almacena
-
 function App() {
-  const [position, setPosition] = useState(0);
-  const [startMoving, setStartMoving] = useState(true);
-  const { id, image, name, title, quote } = data[position];
+  const [people, setPeople] = useState(data);
+  const [index, setIndex] = useState(0);
+  const [timer, setTimer] = useState(true);
 
-  function checkPosition(index) {
-    if (index > data.length - 1) {
+  function setReview(id, actualIndex) {
+    const correctIndex = actualIndex + 1;
+
+    if (correctIndex === id) return "activeSlide";
+    // if (correctIndex + 1 === id) return "nextSlide";
+    if (correctIndex + 1 === id || (correctIndex === people.length && id === 1))
+      return "nextSlide";
+
+    return "lastSlide";
+  }
+
+  function checkIndex(index) {
+    if (index > people.length - 1) {
       return 0;
-    }
-    if (index < 0) {
-      return data.length - 1;
+    } else if (index < 0) {
+      return people.length - 1;
     }
     return index;
   }
 
-  const startTime = () => {
-    setTimeout(() => {
-      setPosition((prev) => checkPosition(prev + 1));
-      setStartMoving((prev) => !prev);
-    }, 2000);
-  };
+  // ------------>>>>>>>>> start automatic movement slide with setTimeout
+  // function startTimer() {
+  //   setTimeout(() => {
+  //     setTimer((prev) => !prev);
+  //     setIndex((prevIndex) => checkIndex(prevIndex + 1));
+  //   }, 1000);
+  // }
 
+  // useEffect(startTimer, [timer]);
+
+  // ------------>>>>>>>>> start automatic movement slide with setInterval
   useEffect(() => {
-    console.log("useEffect");
-    clearTimeout(startTime);
-    // startTime();
-  }, [startMoving]);
-
-  console.log("render");
-
-  // en lugar de que siga corriendo, quiero hacer que se muevan a la derecha o izquierda.
-  // tengo que poner todos en un solo contenedor, limitar el contenedor a una medida y poner el elemento que se muetsra que cubra el 100% de esa medida.
-  // al darle click debo activar alguna forma de transicion
+    const interval = setInterval(() => {
+      setIndex((prev) => checkIndex(prev + 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [index])
 
   return (
     <>
-      <button
-        style={{ width: "100px", margin:"1rem" }}
-        onClick={() => setPosition(checkPosition(position - 1))}
-      >
-        <FiChevronLeft />
-      </button>
-      <button
-        style={{ width: "100px" }}
-        onClick={() => setPosition(checkPosition(position + 1))}
-      >
-        <FiChevronRight />
-      </button>
-      <h3>{name}</h3>
-      <img style={{ width: "200px", height: "200px" }} src={image} alt="" />
-      <h4>{title}</h4>
-      <p>{quote}</p>
+      <section className="section">
+        <div className="title">
+          <h2>
+            <span>/</span>reviews
+          </h2>
+        </div>
+        <div className="section-center">
+          {people.map((person) => {
+            const { id, image, name, title, quote } = person;
+            return (
+              <article className={`${setReview(id, index)}`} key={id}>
+                <img src={image} alt={name} className="person-img" />
+                <h4>{name}</h4>
+                <p className="title">{title}</p>
+                <p className="text">{quote}</p>
+                <FaQuoteRight />
+              </article>
+            );
+          })}
+          <button
+            className="prev"
+            onClick={() => setIndex(checkIndex(index - 1))}
+          >
+            <FiChevronLeft />
+          </button>
+          <button
+            className="next"
+            onClick={() => setIndex(checkIndex(index + 1))}
+          >
+            <FiChevronRight />
+          </button>
+        </div>
+      </section>
     </>
   );
 }
