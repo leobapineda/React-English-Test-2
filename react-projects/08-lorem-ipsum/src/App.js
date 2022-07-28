@@ -10,6 +10,9 @@ function App() {
     if (paragrapgNumber <= 0) {
       setLorem(data.slice(0, 1));
       return;
+    } else if (paragrapgNumber > data.length) {
+      setLorem(data.slice(0, data.length));
+      return;
     }
     setLorem(data.slice(0, paragrapgNumber));
   }
@@ -23,7 +26,7 @@ function App() {
         </label>
         <button className="btn">Generate</button>
       </form>
-      <div>
+      <article className="lorem'text" >
         {lorem.map((item, index) => {
           return (
             <div key={index}>
@@ -32,9 +35,8 @@ function App() {
             </div>
           );
         })}
-      </div>
+      </article>
     </section>
   );
 }
-
 export default App;
