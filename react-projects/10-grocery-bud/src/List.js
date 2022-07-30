@@ -1,22 +1,20 @@
 import React from 'react'
-const List = ({ items, handleRemove, handleEdit }) => {
-
-  return (
-    <>
-      <section>
-        {items.map((stuff) => {
-          const { item, id} = stuff;
-          return (
-            <p key={id} >
-              <span>{item}</span>
-              <button onClick={() => handleRemove(id)}>remove</button>
-              <button onClick={() => handleEdit(id, item)}>edit</button>
-            </p>
-          );
-        })}
-      </section>
-    </>
-  );
-};
+import { FaEdit, FaTrash } from 'react-icons/fa'
+const List = ({items}) => {
+  return <div className="grocery-list">
+    {items.map((item) => {
+      const {id, title} = item
+      return (
+        <article key={id} className="grocery-item">
+          <p className="title">{title}</p>
+          <div className="btn-container">
+            <button type='button' className="delete-btn"> <FaTrash /> </button>
+            <button type='button' className="edit-btn"><FaEdit /></button>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+}
 
 export default List

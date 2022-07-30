@@ -1,66 +1,64 @@
 import React, { useState, useEffect } from "react";
 import List from "./List";
 import Alert from "./Alert";
-import { useRef } from "react";
+import { toBeRequired } from "@testing-library/jest-dom";
 
 function App() {
+  const [name, setName] = useState("");
   const [list, setList] = useState([]);
-  const [isEdit, setIsEdit] = useState(false);
-  const [itemId, setItemId] = useState("");
-  const inputRef = useRef("");
+  const [isEditing, setIsEditing] = useState();
+  const [editId, setEditId] = useState(null);
+  const [alert, setAlert] = useState({ show: true, msg: "", type: "" });
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!isEdit) {
-      const newItem = { item: inputRef.current.value, id: Date.now() };
-      setList((prev) => {
-        return [...prev, newItem];
-      });
-      inputRef.current.value = "";
-    } else if (isEdit) {
-      const newItemValue = inputRef.current.value;
-      const newItems = list.map((stuff) => {
-        if (stuff.id === itemId) {
-          return { ...stuff, item: newItemValue };
-        }
-        return stuff;
-      });
-      setList(newItems);
-      setIsEdit(false);
-      inputRef.current.value = "";
+
+    if (!name) {
+      showAlert(true, "danger", "please enter value");
+    } else if (!name && isEditing) {
+      // deal with edit
+    } else {
+      const newItem = { id: Date.now(), title: name };
+      setList([...list, newItem]);
+      showAlert(true, "success", "item added to list" );
+      setName("")
     }
   }
 
-  function handleRemove(id) {
-    const newItems = list.filter((item) => item.id !== id);
-    setList(newItems);
+  function showAlert(show = false, type = "", msg = "") {
+    setAlert({ show, type, msg});
   }
 
-  function handleEdit(id, item) {
-    inputRef.current.value = item;
-    setIsEdit(true);
-    setItemId(id);
+  function clearList() {
+      setList([]);
+      showAlert(true, "danger", "Empty List");
   }
 
   return (
-    <>
-      <section>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <input ref={inputRef} type="text" />
-          <button>{isEdit ? "EDIT" : "ADD"}</button>
-        </form>
-      </section>
-      <section>
-        <List
-          handleEdit={handleEdit}
-          handleRemove={handleRemove}
-          items={list}
-        />
-      </section>
+    <section className="section-center">
+      <form onSubmit={(e) => handleSubmit(e)} className="grocery-form">
+        {alert.show && <Alert {...alert} removeAlert={showAlert} />}
+        <h3>grocery dub</h3>
+        <div className="form-control">
+          <input
+            className="grocery"
+            type="text"
+            placeholder="e.g. eggs"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <button className="submit-btn">
+            {isEditing ? "edit item" : "add item"}
+          </button>
+        </div>
+      </form>
       {list.length > 0 && (
-        <button onClick={() => setList([])}>REMOVE ALL </button>
+        <div className="grocery-container">
+          <List items={list} />
+          <button onClick={clearList} className="clear-btn">Clear List</button>
+        </div>
       )}
-    </>
+    </section>
   );
 }
 
