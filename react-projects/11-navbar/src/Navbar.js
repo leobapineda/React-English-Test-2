@@ -4,26 +4,36 @@ import { links, social } from "./data";
 import logo from "./logo.svg";
 
 const Navbar = () => {
-
-
-  // change 
-
+  const [show, setShow] = useState(false);
+  const linksHeight = `${links.length * 2.5}rem`;
+        // mandar una variable a css y poner ese height
+  console.log(show);
+  console.log(linksHeight);
   return (
     <nav>
       <div className="nav-center">
         <div className="nav-header">
           <img src={logo} alt="logo" />
-          <button className="nav-toggle">
+          <button
+            onClick={() => setShow((prev) => !prev)}
+            className="nav-toggle"
+          >
             <FaBars />
           </button>
         </div>
-        <div className="links-container show-container">
+        <div
+          style={{ height: `${show ? linksHeight : 0}` }}
+          className={`links-container`}
+        >
           <ul className="links">
             {links.map((link) => {
               const { id, text, url } = link;
               return (
                 <li key={id}>
-                  <a href={url}>{text}</a>
+                  <a href={url}>
+                    {text}
+                    {id}
+                  </a>
                 </li>
               );
             })}
