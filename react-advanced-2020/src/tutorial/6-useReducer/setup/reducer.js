@@ -7,7 +7,7 @@ function reducer(usersState, action) {
     HIDE_MESSAGE: "hide",
     REMOVE: "remove",
   };
-
+  
   const { users, isModal, modalMessage } = usersState;
   switch (action.type) {
     case ACTIONS.ADD:
