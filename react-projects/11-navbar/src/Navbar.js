@@ -4,28 +4,35 @@ import { links, social } from "./data";
 import logo from "./logo.svg";
 
 const Navbar = () => {
-  const [show, setShow] = useState(false);
-  const linksHeight = `${links.length * 2.5}rem`;
-        // mandar una variable a css y poner ese height
-  console.log(show);
-  console.log(linksHeight);
+  const [showLinks, setShowLinks] = useState(false);
+  const linksContainerRef = useRef(null);
+  const linksRef = useRef(null);
+  function handleClick() {}
+
+  useEffect(() => {
+    console.log("useEffect");
+    const linksHeight = linksRef.current.getBoundingClientRect().height;
+    if (showLinks) {
+      linksContainerRef.current.style.height = `${linksHeight}px`;
+    } else {
+      linksContainerRef.current.style.height = `${0}px`;
+    }
+  }, [showLinks]);
+
   return (
     <nav>
       <div className="nav-center">
         <div className="nav-header">
           <img src={logo} alt="logo" />
           <button
-            onClick={() => setShow((prev) => !prev)}
+            onClick={() => setShowLinks((prev) => !prev)}
             className="nav-toggle"
           >
             <FaBars />
           </button>
         </div>
-        <div
-          style={{ height: `${show ? linksHeight : 0}` }}
-          className={`links-container`}
-        >
-          <ul className="links">
+        <div ref={linksContainerRef} className={`links-container`}>
+          <ul ref={linksRef} className="links">
             {links.map((link) => {
               const { id, text, url } = link;
               return (
