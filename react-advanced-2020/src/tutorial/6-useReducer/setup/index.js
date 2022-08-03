@@ -1,75 +1,116 @@
-import React, { useReducer, useState, useRef } from "react";
-// ---------->>>
+import React, { useReducer, useRef } from "react";
+import { useEffect } from "react";
 import Modal from "./Modal";
-import data from "../../../data";
 import reducer from "./reducer";
 const Index = () => {
+  let localTodos = JSON.parse(localStorage.getItem("todos"));
+
+  let initialState = {
+    todos: localTodos || [],
+    modal: { showModal: false, modalMessage: "", modalColor: "" },
+  };
+
   const ACTIONS = {
-    ADD: "add user",
-    REMOVE: "remove user",
-    ERROR: "error",
-    HIDE_MESSAGE: "hide",
-    REMOVE: "remove",
+    ADD: "ADD",
+    REMOVE: "REMOVE",
+    EMPTY: "EMPTY",
+    HIDE: "HIDE",
   };
 
-  const usersInitValue = {
-    users: data,
-    isModal: false,
-    modalMessage: "",
-  };
+  const inputValueRef = useRef("");
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [usersState, dispatch] = useReducer(reducer, usersInitValue);
-  const inputEl = useRef(null);
+  useEffect(() => {
+    // const local = ;
+    console.log();
+  }, []);
 
- 
+  useEffect(() => {
+    console.log("localStorage");
+    localStorage.setItem("todos", JSON.stringify(state.todos));
+  }, [state]);
+
+  // cada vez que hay un cambio en mi state
 
   function handleSubmit(e) {
     e.preventDefault();
-    const userName = inputEl.current.value;
-    if (userName) {
+    if (inputValueRef.current.value) {
+      addTodo();
+    } else {
       dispatch({
-        type: ACTIONS.ADD,
+        type: ACTIONS.EMPTY,
         payload: {
-          name: userName,
-          id: Date.now(),
+          modal: showModal(true, "must add todo text", "red"),
         },
       });
-    } else {
-      dispatch({ type: ACTIONS.ERROR, payload: "MUST PROVIDE USERNAME" });
     }
-    setTimeout(() => {
-      dispatch({ type: ACTIONS.HIDE_MESSAGE });
-    }, 1000);
+    inputValueRef.current.value = "";
   }
 
-  function removeUser(id) {
-    const newUsers = usersState.users.filter((user) => user.id !== id);
-    dispatch({ type: ACTIONS.REMOVE, payload: newUsers });
+  function addTodo() {
+    let todoText = inputValueRef.current.value;
+    const newTodo = { text: todoText, id: Date.now() };
+    dispatch({
+      type: ACTIONS.ADD,
+      payload: {
+        newTodo,
+        modal: showModal(true, "todo added", "green"),
+      },
+    });
   }
 
-  console.log("render");
+  function removeTodo(id) {
+    // map en todo mi array
+    const newTodos = state.todos.filter((todo) => todo.id !== id);
+    dispatch({
+      type: ACTIONS.REMOVE,
+      payload: {
+        todos: newTodos,
+        modal: showModal(true, "todo removed", "red"),
+      },
+    });
+    // filtrar
+    // volver a poner mis todos
+  }
+
+  function showModal(show, message, color) {
+    return { showModal: show, modalMessage: message, modalColor: color };
+  }
+
+  function hideModal() {
+    // console.log("hideModal");
+    dispatch({
+      type: ACTIONS.HIDE,
+      payload: {
+        modal: showModal(false, "", ""),
+      },
+    });
+  }
+
+  // console.log("render ");
   return (
     <>
-      <form className="form" onSubmit={(e) => handleSubmit(e)}>
-        <input ref={inputEl} type="text" />
+      <h1>todo list</h1>
+      <form onSubmit={(e) => handleSubmit(e)}>
+        <input ref={inputValueRef} type="text" />
+        <button>add item</button>
       </form>
-      <Modal show={usersState.isModal} message={usersState.modalMessage} />
-      <div className="item">{usersState.users.length}</div>
-      <div>
-        {usersState.users.map((user) => {
-          const { id, name } = user;
+      <section>
+        <Modal {...state.modal} hideModal={hideModal} />
+      </section>
+      <section>
+        {state.todos.map((todo) => {
+          const { id, text } = todo;
           return (
-            <div className="item" style={{ margin: "1rem" }} key={id}>
-              <span style={{ marginRight: "1rem" }}>{name}</span>
-              <button onClick={() => removeUser(id)}>remove</button>
-            </div>
+            <article key={id}>
+              <span>{text}</span>
+              <button onClick={() => removeTodo(id)}>remove</button>
+            </article>
           );
         })}
-      </div>
+      </section>
     </>
   );
 };
 
 export default Index;
-
-// move the reduce logic to another componenet

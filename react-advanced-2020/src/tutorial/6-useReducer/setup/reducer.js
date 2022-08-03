@@ -1,32 +1,25 @@
-function reducer(usersState, action) {
+const ACTIONS = {
+  ADD: "ADD",
+  REMOVE: "REMOVE",
+  EMPTY: "EMPTY",
+  HIDE: "HIDE",
+};
 
-    const ACTIONS = {
-    ADD: "add user",
-    REMOVE: "remove user",
-    ERROR: "error",
-    HIDE_MESSAGE: "hide",
-    REMOVE: "remove",
-  };
-  
-  const { users, isModal, modalMessage } = usersState;
+function reducer(state, action) {
+  const { newTodo, modal } = action.payload;
   switch (action.type) {
     case ACTIONS.ADD:
       return {
-        isModal: true,
-        modalMessage: "USER ADDED!",
-        users: [...users, action.payload],
+        ...state,
+        modal: { ...modal },
+        todos: [...state.todos, { ...newTodo }],
       };
-    case ACTIONS.HIDE_MESSAGE:
-      return { ...usersState, isModal: false };
     case ACTIONS.REMOVE:
-      // const { users, isModal, modalMessage } = usersState;
-      return { isModal, modalMessage, users: action.payload };
-    case ACTIONS.ERROR:
-      return {
-        isModal: true,
-        users,
-        modalMessage: action.payload,
-      };
+      return action.payload;
+    case ACTIONS.EMPTY:
+      return { ...state, modal: { ...modal } };
+    case ACTIONS.HIDE:
+      return { ...state, modal: { ...modal } };
     default:
       throw new Error();
   }
