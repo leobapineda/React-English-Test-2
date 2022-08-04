@@ -28,79 +28,45 @@ const itemApi = () =>
   });
 
 function App() {
-  const [data, setData] = useState([]);
-  // obtener al renderizar
-  // una vez obtenida modificar
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const apiRes = itemApi()
-      .then((res) => setData(res))
-      .catch((err) => console.log(err));
-    console.log(data);
-    // const newArray = data.map((user) => {
-    //   let group1 = [];
-    //   let group2 = [];
-    //   let group3 = [];
-    //   if (user.gruopId === 1) {
-    //     group1.push(user);
-    //   } else if (user.gruopId === 2) {
-    //     group2.push(user);
-    //   } else if (user.gruopId === 3) {
-    //     group3.push(user);
-    //   }
-    //   return [1, 2, 3];
-    // });
-    // console.log(newArray);
+    async function fetchData() {
+      const apiData = await itemApi();
 
-    // no me regresa un array, porque
-  }, []);
-
-      let group1 = [];
-      let group2 = [];
-      let group3 = [];
-
-  data.map((user) => {
-    if (user.gruopId === 1) {
-      group1.push(user);
-    } else if (user.gruopId === 2) {
-      group2.push(user);
-    } else if (user.gruopId === 3) {
-      group3.push(user);
+      const newApiData = [[], [], []];
+      apiData.map((user) => {
+        if (user.gruopId === 1) {
+          newApiData[0].push(user);
+        } else if (user.gruopId === 2) {
+          newApiData[1].push(user);
+        } else {
+          newApiData[2].push(user);
+        }
+      });
+      setUsers(newApiData);
     }
-    return 
-  });
-
-  let newArray = [group1, group2, group3];
-  console.log(newArray);
-  // ya tengo el array
-    // por cada array me tiene que dar un nuevo nuevo h1
-  
-  console.log(data);
-
-  return <div>{newArray.map((arrayUsers, index) => {
-    return (
-      <div key={index}>
-        <h4>group {index + 1}</h4>
-        <ul>
-          {arrayUsers.map((user) => {
-            const { gruopId, nombre } = user;
-            return <li key={nombre}>{nombre}</li>;
-          })}
-        </ul>
-      </div>
-    );
-    // por cada array regresar un 
-    // h1
-    // ul
-
-
-  })}</div>;
+    fetchData();
+  }, []);
+  console.log("render");
+  return (
+    <div>
+      {users.map((userArray, index) => {
+        return (
+          <div key={index}>
+            <h4 style={{ margin: "0", marginTop: "1rem" }}>
+              Group {index + 1}:
+            </h4>
+            <ul>
+              {userArray.map((user) => {
+                return <li key={user.nombre}>{user.nombre}</li>;
+              })}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
-
-// group 1:
-// ul
-// li name
-// li name
-
 
 export default App;
