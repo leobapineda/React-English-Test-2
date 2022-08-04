@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from "react";
+import { createContext } from "react";
 import data from "../../../data";
-// more components
-// fix - context api, redux (for more complex cases)
 
+const context = createContext();
 const ContextAPI = () => {
   const [people, setPeople] = useState(data);
+
   const removePerson = (id) => {
     setPeople((people) => {
       return people.filter((person) => person.id !== id);
@@ -13,28 +14,28 @@ const ContextAPI = () => {
   return (
     <>
       <h3>prop drilling</h3>
-      <List people={people} removePerson={removePerson} />
+      <context.Provider value={{ removePerson, people }}>
+        <List />
+      </context.Provider>
     </>
   );
 };
 
-const List = ({ people, removePerson }) => {
+const List = () => {
+  const { people } = useContext(context);
+
   return (
     <>
       {people.map((person) => {
-        return (
-          <SinglePerson
-            key={person.id}
-            removePerson={removePerson}
-            {...person}
-          />
-        );
+        return <SinglePerson key={person.id} {...person} />;
       })}
     </>
   );
 };
 
-const SinglePerson = ({ id, name, removePerson }) => {
+const SinglePerson = ({ id, name }) => {
+  const { removePerson} = useContext(context);
+
   return (
     <div className="item">
       <h4>{name}</h4>
