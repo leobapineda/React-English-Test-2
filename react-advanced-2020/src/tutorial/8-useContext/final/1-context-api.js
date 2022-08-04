@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { data } from '../../../data';
+import data from '../../../data';
 // more components
 // fix - context api, redux (for more complex cases)
 
