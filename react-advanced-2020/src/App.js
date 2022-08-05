@@ -11,25 +11,41 @@
 // }
 // export default App;
 
+// import React from "react";
+// import { useEffect } from "react";
+// import { useState } from "react";
+// import useLocalStorage from "./hooks/useLocalStorage";
+// function App() {
+//   const [local, setLocal] = useLocalStorage("valor", "")
+
+//   return (
+//     <>
+//       <input
+//         onChange={(e) => setLocal(e.target.value)}
+//         type="text"
+//         name=""
+//         id=""
+//         value={local}
+//       />
+//     </>
+//   );
+// }
+// export default App;
+
 import React from "react";
-import { useEffect } from "react";
 import { useState } from "react";
-import useLocalStorage from "./hooks/useLocalStorage";
+import useUpdateLogger from "./hooks/useUpdateLogger";
 function App() {
-  const [local, setLocal] = useLocalStorage("valor", "")
+  const [text, setText] = useState("");
+
+  useUpdateLogger(text);
+
+  console.log("App");
 
   return (
     <>
-      <input
-        onChange={(e) => setLocal(e.target.value)}
-        type="text"
-        name=""
-        id=""
-        value={local}
-      />
+      <input onChange={(e) => setText(e.target.value)} type="text" />
     </>
   );
 }
 export default App;
-
-
