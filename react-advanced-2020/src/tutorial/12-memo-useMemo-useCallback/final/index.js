@@ -31,15 +31,15 @@ const Index = () => {
   ])
   return (
     <>
-      <h1>Count : {count}</h1>
-      <button className='btn' onClick={() => setCount(count + 1)}>
+      <h1 style={{ fontSize: "25px" }}>Count : {count}</h1>
+      <button className="btn" onClick={() => setCount(count + 1)}>
         click me
       </button>
-      <h1 style={{ marginTop: '3rem' }}>cart : {cart}</h1>
-      <h1>Most Expensive : ${mostExpensive}</h1>
+      <h1 style={{ marginTop: "1rem", fontSize: "25px" }}>cart : {cart}</h1>
+      <h1 style={{ fontSize: "25px" }}>Most Expensive : ${mostExpensive}</h1>
       <BigList products={products} addToCart={addToCart} />
     </>
-  )
+  );
 }
 
 const BigList = React.memo(({ products, addToCart }) => {
@@ -71,12 +71,15 @@ const SingleProduct = ({ fields, addToCart }) => {
   //   console.count('hello from product');
   // });
   return (
-    <article className='product'>
-      <img src={image} alt={name} />
+    <article
+      style={{ width: "150px", height: "200px", margin: "0.1rem" }}
+      className="product"
+    >
+      <img style={{ width: "100px", height: "100px" }} src={image} alt={name} />
       <h4>{name}</h4>
       <p>${price}</p>
       <button onClick={addToCart}>add to cart</button>
     </article>
-  )
+  );
 }
 export default Index
