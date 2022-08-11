@@ -3,8 +3,11 @@ import CartItem from './CartItem'
 import { useGlobalContext } from './context'
 
 const CartContainer = () => {
-  const { cart, state } = useGlobalContext();
-  const Total = state.totalPrice
+  const {
+    state: { products: cart, totalPrice },
+    clearCart,
+  } = useGlobalContext();
+  const Total = totalPrice;
   
 
   // console.log(cart);
@@ -28,7 +31,7 @@ const CartContainer = () => {
       </header>
       {/* cart items */}
       <div>
-        {cart.map((item) => {
+        {Object.values(cart).map((item) => {
           return <CartItem key={item.id} {...item} />;
         })}
       </div>
@@ -40,10 +43,7 @@ const CartContainer = () => {
             total <span>${Total}</span>
           </h4>
         </div>
-        <button
-          className="btn clear-btn"
-          onClick={() => console.log("clear cart")}
-        >
+        <button className="btn clear-btn" onClick={clearCart}>
           clear cart
         </button>
       </footer>

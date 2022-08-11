@@ -2,12 +2,12 @@ import React from "react";
 import { useGlobalContext } from "./context";
 const CartItem = ({ id, img, title, price, amount }) => {
   
-  const { state, increaseProductAmount, decreaseProductAmount } =
-  useGlobalContext();
-
-  const contextAmount = state.products[id].amount;
-  // const contextAmount = 0
-
+  const {
+    increaseProductAmount,
+    decreaseProductAmount,
+    removeCartProduct,
+  } = useGlobalContext();
+  
   return (
     <article className="cart-item">
       <img src={img} alt={title} />
@@ -15,10 +15,7 @@ const CartItem = ({ id, img, title, price, amount }) => {
         <h4>{title}</h4>
         <h4 className="item-price">${price}</h4>
         {/* remove button */}
-        <button
-          className="remove-btn"
-          onClick={() => console.log("remove item")}
-        >
+        <button className="remove-btn" onClick={() => removeCartProduct(id)}>
           remove
         </button>
       </div>
@@ -34,7 +31,8 @@ const CartItem = ({ id, img, title, price, amount }) => {
         </button>
         {/* amount */}
         {/* <p className="amount">{contextAmount}</p> */}
-        <p className="amount">{contextAmount}</p>
+        {/* <p className="amount">{contextAmount}</p> */}
+        <p className="amount">{amount}</p>
 
         {/* decrease amount */}
         <button
